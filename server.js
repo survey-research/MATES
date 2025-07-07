@@ -1,63 +1,69 @@
-const express = require("express");
-const { GoogleSpreadsheet } = require("google-spreadsheet");
-const path = require("path");
+import express from "express";
+import bodyParser from "body-parser";
+import { google } from "googleapis";
+import dotenv from "dotenv";
+dotenv.config();
 
-const creds = JSON.parse(process.env.GOOGLE_CREDS_JSON);
 const app = express();
+app.use(bodyParser.json());
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
-
+// Set your spreadsheet ID and sheet name here:
 const SPREADSHEET_ID = "1pzmEVa_jbJ_KQ0Ff6lhxrkyd-JQurasHSEICns1H_Nw";
 const SHEET_NAME = "Gen Alpha Survey";
 
-async function appendRow(data) {
-  const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
-  await doc.useServiceAccountAuth(creds);
-  await doc.loadInfo();
-  const sheet = doc.sheetsByTitle[SHEET_NAME];
-  if (!sheet) throw new Error(`Sheet "${SHEET_NAME}" not found`);
-
-  // Example: Map your data object keys to sheet columns
-  await sheet.addRow({
-    "Age Range": data.ageRange,
-    "Section 0 Time (s)": data.timer0,
-    "Section 1 Time (s)": data.timer1,
-    "Section 2 Time (s)": data.timer2,
-    "Section 3 Time (s)": data.timer3,
-    "Section 4 Time (s)": data.timer4,
-    "Section 5 Time (s)": data.timer5,
-    "Section 6 Time (s)": data.timer6,
-    "Ethnicity": data.ethnicity,
-    "Frog Climb Question": data.frogClimb,
-    "Juice Cups Question": data.juiceCups,
-    "Juice Confidence": data.confJuice,
-    "Juice Real/Fake": data.realFake1,
-    "Juice Feel": data.feel1,
-    "Cookies Question": data.cookies,
-    "Cookies Confidence": data.confCookie,
-    "Cookies Real/Fake": data.realFake2,
-    "Cookies Feel": data.feel2,
-    "Shoes Cost Question": data.shoesCost,
-    "Shoes Confidence": data.confShoes,
-    "Shoes Real/Fake": data.realFake3,
-    "Shoes Feel": data.feel3,
-  });
-}
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/index.html"));
+// Authenticate with Google Sheets API using service account
+const auth = new google.auth.GoogleAuth({
+  credentials: {
+    client_email: process.env.CLIENT_EMAIL,
+    private_key: process.env.PRIVATE_KEY.replace(/\\n/g, "\n"),
+  },
+  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
+const sheets = google.sheets({ version: "v4", auth });
 
 app.post("/submit", async (req, res) => {
   try {
-    await appendRow(req.body);
+    const d = req.body;
+
+    // Map the incoming data to your exact column order:
+    const row = [
+      d.age || "",
+      d.ethnicity || "",
+      d.section0Time || 0,
+      d.section1Time || 0,  // If you want to track this (likely 0, no inputs in video sections)
+      d.section2Time || 0,
+      d.section3Time || 0,
+      d.logicQ1 || "",
+      d.q1 || "",
+      d.confidenceQ1 || "",
+      d.realFakeQ1 || "",
+      d.feelingQ1 || "",
+      d.q2 || "",
+      d.confidenceQ2 || "",
+      d.realFake2 || "",
+      d.feelingQ2 || "",
+      d.q3 || "",
+      d.confidenceQ3 || "",
+      d.realFake3 || "",
+      d.feelingQ3 || "",
+    ];
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${SHEET_NAME}!A1`,
+      valueInputOption: "USER_ENTERED",
+      insertDataOption: "INSERT_ROWS",
+      requestBody: {
+        values: [row],
+      },
+    });
+
     res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    console.error("Error appending to sheet:", error);
+    res.json({ success: false, message: error.message });
   }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
