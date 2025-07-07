@@ -2,311 +2,480 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Research Survey</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f8f9fa;
       margin: 0;
-      padding: 0;
-      background: #f2f2f2;
-    }
-    .container {
+      padding: 20px;
       max-width: 800px;
-      margin: auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 8px;
+      margin-left: auto;
+      margin-right: auto;
     }
     h1 {
       text-align: center;
+      color: #202124;
+      margin-bottom: 30px;
     }
-    .section {
-      display: none;
-      margin-bottom: 2rem;
-      border-left: 4px solid #1a73e8;
-      padding-left: 1rem;
+    .section-description {
+      margin-bottom: 15px;
+      font-size: 1rem;
+      color: #5f6368;
     }
-    .section.active {
+    .question-block {
+      background: white;
+      border-left: 5px solid #1a73e8; /* Google Blue */
+      padding: 15px 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 1px 3px rgba(60,64,67,.3);
+      border-radius: 4px;
+    }
+    .question-block label {
       display: block;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #202124;
     }
-    .question {
-      margin-bottom: 1rem;
+    .question-block input[type="radio"] {
+      margin-right: 10px;
+      cursor: pointer;
     }
-    .question label {
-      display: block;
-      margin-bottom: 0.5rem;
+    .likert-scale {
+      display: flex;
+      justify-content: space-between;
+      max-width: 350px;
+      margin-top: 8px;
+      margin-bottom: 20px;
+    }
+    .likert-scale label {
+      flex: 1;
+      text-align: center;
+      font-size: 0.85rem;
     }
     button {
-      display: block;
-      margin: 1rem auto;
-      padding: 0.5rem 1.5rem;
-      font-size: 1rem;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1.1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+      float: right;
+    }
+    button:disabled {
+      background-color: #a8c0f0;
+      cursor: not-allowed;
+    }
+    iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+      margin-bottom: 10px;
+    }
+    .clearfix::after {
+      content: "";
+      clear: both;
+      display: table;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Research Survey</h1>
 
-    <form id="surveyForm">
-      <!-- Sections inserted here by JS -->
-    </form>
+  <h1>Research Survey</h1>
 
-    <button type="button" id="nextBtn">Next</button>
-    <div id="timerMessage" style="text-align: center; color: gray; margin-top: 1rem;"></div>
-  </div>
+  <form id="surveyForm">
+
+    <!-- Section 0: Welcome + Demographics + Logic Q1 -->
+    <div class="section" data-section-index="0">
+      <p class="section-description">
+        Hello, my name is M Majid and I am a sophomore at the Marine Academy of Technology and Environmental Science.
+        I am conducting a survey for my research project regarding different cognitive styles.
+        This short study includes a series of 20-second videos, logic questions and self assessments.
+        When you submit this form, it will not automatically collect your details like name and email address unless you provide it yourself.
+      </p>
+
+      <p class="section-description">
+        Demographics Section: This section collects general information about participants to help us understand the background of respondents and ensure the study includes a diverse group.
+        Your responses are confidential and used only for research purposes.
+      </p>
+
+      <div class="question-block" id="ageRangeBlock">
+        <p><strong>What is your age range?</strong></p>
+        <label><input type="radio" name="age" value="0-13" required> 0-13</label>
+        <label><input type="radio" name="age" value="14-29"> 14-29</label>
+        <label><input type="radio" name="age" value="30-45"> 30-45</label>
+        <label><input type="radio" name="age" value="46-61"> 46-61</label>
+        <label><input type="radio" name="age" value="62-80"> 62-80</label>
+      </div>
+
+      <div class="question-block" id="ethnicityBlock">
+        <p><strong>What is your ethnicity?</strong></p>
+        <label><input type="radio" name="ethnicity" value="White/Caucasian" required> White/Caucasian</label>
+        <label><input type="radio" name="ethnicity" value="Black or African-American"> Black or African-American</label>
+        <label><input type="radio" name="ethnicity" value="American Indian or Alaskan Native"> American Indian or Alaskan Native</label>
+        <label><input type="radio" name="ethnicity" value="Asian/Asian-American"> Asian/Asian-American</label>
+        <label><input type="radio" name="ethnicity" value="Native Hawaiian or other Pacific islander"> Native Hawaiian or other Pacific islander</label>
+        <label><input type="radio" name="ethnicity" value="From multiple races"> From multiple races</label>
+        <label><input type="radio" name="ethnicity" value="Prefer not to disclose"> Prefer not to disclose</label>
+      </div>
+
+      <div class="question-block" id="logicQ1Block">
+        <p><strong>A frog climbs up 4 feet but slips down 1 foot every minute.<br>How many feet does the frog climb in 3 minutes?</strong></p>
+        <label><input type="radio" name="logicQ1" value="9 feet" required> A) 9 feet</label>
+        <label><input type="radio" name="logicQ1" value="12 feet"> B) 12 feet</label>
+        <label><input type="radio" name="logicQ1" value="7 feet"> C) 7 feet</label>
+        <label><input type="radio" name="logicQ1" value="3 feet"> D) 3 feet</label>
+      </div>
+    </div>
+
+    <!-- Section 1: Video 1 -->
+    <div class="section" data-section-index="1" style="display:none;">
+      <p class="section-description">
+        Please watch the following video fully. Proceed to the next section after you are done.
+      </p>
+      <iframe id="video1" src="https://www.youtube.com/embed/PIP4TXsbTgY?enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <p id="video1-timer" style="font-weight:bold; color:#d93025;">You must watch the full 48 seconds before proceeding.</p>
+    </div>
+
+    <!-- Section 2: Question 1 -->
+    <div class="section" data-section-index="2" style="display:none;">
+      <p class="section-description">
+        Please answer the following questions honestly and to the best of your ability.
+      </p>
+
+      <div class="question-block" id="q1Block">
+        <p><strong>Jerry had 20 cups of juice. He drank all but 9 of them.<br>How many cups does Jerry have left?</strong></p>
+        <label><input type="radio" name="q1" value="9" required> A) 9</label>
+        <label><input type="radio" name="q1" value="11"> B) 11</label>
+        <label><input type="radio" name="q1" value="0"> C) 0</label>
+        <label><input type="radio" name="q1" value="20"> D) 20</label>
+      </div>
+
+      <div class="question-block" id="confidenceQ1Block">
+        <p><strong>How confident are you about your answer?</strong></p>
+        <div class="likert-scale" id="likertQ1" required>
+          <label><input type="radio" name="confidenceQ1" value="1" required>Not at all confident</label>
+          <label><input type="radio" name="confidenceQ1" value="2">2</label>
+          <label><input type="radio" name="confidenceQ1" value="3">3</label>
+          <label><input type="radio" name="confidenceQ1" value="4">4</label>
+          <label><input type="radio" name="confidenceQ1" value="5">Very confident</label>
+        </div>
+      </div>
+
+      <div class="question-block" id="realFakeQ1Block">
+        <p><strong>Is this video real or fake?</strong></p>
+        <label><input type="radio" name="realFakeQ1" value="Real" required> Real</label>
+        <label><input type="radio" name="realFakeQ1" value="Fake"> Fake</label>
+      </div>
+
+      <div class="question-block" id="feelingQ1Block">
+        <p><strong>How did this video make you feel?</strong></p>
+        <textarea name="feelingQ1" rows="3" style="width:100%;" required></textarea>
+      </div>
+    </div>
+
+    <!-- Section 3: Video 2 -->
+    <div class="section" data-section-index="3" style="display:none;">
+      <p class="section-description">
+        Please watch the following video fully. Proceed to the next section after you are done.
+      </p>
+      <iframe id="video2" src="https://www.youtube.com/embed/aRCK2vjnIqs?enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <p id="video2-timer" style="font-weight:bold; color:#d93025;">You must watch the full 48 seconds before proceeding.</p>
+    </div>
+
+    <!-- Section 4: Question 2 -->
+    <div class="section" data-section-index="4" style="display:none;">
+      <p class="section-description">
+        Please answer the following questions honestly and to the best of your ability.
+      </p>
+
+      <div class="question-block" id="q2Block">
+        <p><strong>There are 10 cookies in the jar. You take away 4 cookies.<br>How many cookies do you have?</strong></p>
+        <label><input type="radio" name="q2" value="4" required> A) 4</label>
+        <label><input type="radio" name="q2" value="6"> B) 6</label>
+        <label><input type="radio" name="q2" value="10"> C) 10</label>
+        <label><input type="radio" name="q2" value="0"> D) 0</label>
+      </div>
+
+      <div class="question-block" id="confidenceQ2Block">
+        <p><strong>How confident are you about your answer?</strong></p>
+        <div class="likert-scale" id="likertQ2" required>
+          <label><input type="radio" name="confidenceQ2" value="1" required>Not at all confident</label>
+          <label><input type="radio" name="confidenceQ2" value="2">2</label>
+          <label><input type="radio" name="confidenceQ2" value="3">3</label>
+          <label><input type="radio" name="confidenceQ2" value="4">4</label>
+          <label><input type="radio" name="confidenceQ2" value="5">Very confident</label>
+        </div>
+      </div>
+
+      <div class="question-block" id="realFakeQ2Block">
+        <p><strong>Is this video real or fake?</strong></p>
+        <label><input type="radio" name="realFake2" value="Real" required> Real</label>
+        <label><input type="radio" name="realFake2" value="Fake"> Fake</label>
+      </div>
+
+      <div class="question-block" id="feelingQ2Block">
+        <p><strong>How did this video make you feel?</strong></p>
+        <textarea name="feelingQ2" rows="3" style="width:100%;" required></textarea>
+      </div>
+    </div>
+
+    <!-- Section 5: Video 3 -->
+    <div class="section" data-section-index="5" style="display:none;">
+      <p class="section-description">
+        Please watch the following video fully. Proceed to the next section after you are done.
+      </p>
+      <iframe id="video3" src="https://www.youtube.com/embed/RWUx0NnOpnU?enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <p id="video3-timer" style="font-weight:bold; color:#d93025;">You must watch the full 48 seconds before proceeding.</p>
+    </div>
+
+    <!-- Section 6: Question 3 -->
+    <div class="section" data-section-index="6" style="display:none;">
+      <p class="section-description">
+        Please answer the following questions to the best of your ability.
+      </p>
+
+      <div class="question-block" id="q3Block">
+        <p><strong>A soccer ball costs $3 and a pair of shoes costs $7 more than the ball. How much do the shoes cost?</strong></p>
+        <label><input type="radio" name="q3" value="$7" required> A) $7</label>
+        <label><input type="radio" name="q3" value="$10"> B) $10</label>
+        <label><input type="radio" name="q3" value="$3"> C) $3</label>
+        <label><input type="radio" name="q3" value="$4"> D) $4</label>
+      </div>
+
+      <div class="question-block" id="confidenceQ3Block">
+        <p><strong>How confident are you about your answer?</strong></p>
+        <div class="likert-scale" id="likertQ3" required>
+          <label><input type="radio" name="confidenceQ3" value="1" required>Not at all confident</label>
+          <label><input type="radio" name="confidenceQ3" value="2">2</label>
+          <label><input type="radio" name="confidenceQ3" value="3">3</label>
+          <label><input type="radio" name="confidenceQ3" value="4">4</label>
+          <label><input type="radio" name="confidenceQ3" value="5">Very confident</label>
+        </div>
+      </div>
+
+      <div class="question-block" id="realFakeQ3Block">
+        <p><strong>Is this video real or fake?</strong></p>
+        <label><input type="radio" name="realFake3" value="Real" required> Real</label>
+        <label><input type="radio" name="realFake3" value="Fake"> Fake</label>
+      </div>
+
+      <div class="question-block" id="feelingQ3Block">
+        <p><strong>How did this video make you feel?</strong></p>
+        <textarea name="feelingQ3" rows="3" style="width:100%;" required></textarea>
+      </div>
+    </div>
+
+    <!-- Section 7: Thank You -->
+    <div class="section" data-section-index="7" style="display:none; text-align:center;">
+      <h2>Thank you for your submission!</h2>
+      <p>Your responses have been recorded.</p>
+    </div>
+
+    <div class="clearfix">
+      <button type="button" id="prevBtn" style="display:none;">Previous</button>
+      <button type="button" id="nextBtn">Next</button>
+    </div>
+  </form>
 
   <script>
-    const form = document.getElementById("surveyForm");
-    const nextBtn = document.getElementById("nextBtn");
-    const timerMessage = document.getElementById("timerMessage");
+    // Section timer vars
+    const VIDEO_SECTIONS = [1, 3, 5];
+    const VIDEO_DURATION = 48; // seconds
 
+    const sections = document.querySelectorAll('.section');
     let currentSection = 0;
-    let startTime = Date.now();
-    const sectionTimers = [];
-    let videoTimeout;
 
-    const sections = [
-      {
-        id: "intro",
-        html: `
-          <div class="question">
-            <p>Hello, my name is M Majid and I am a sophomore at the Marine Academy of Technology and Environmental Science. I am conducting a survey for my research project regarding different cognitive styles.<br>This short study includes a series of 20-second videos, logic questions, and self assessments.<br>When you submit this form, it will not automatically collect your details like name and email address unless you provide it yourself.</p>
-            <p><strong>Demographics Section:</strong> This section collects general information about participants to help us understand the background of respondents and ensure the study includes a diverse group. Your responses are confidential and used only for research purposes.</p>
-          </div>
-          <div class="question">
-            <label>What is your age range?</label>
-            <select name="ageRange" required>
-              <option value="">Select</option>
-              <option>0-13</option>
-              <option>14-29</option>
-              <option>30-45</option>
-              <option>46-61</option>
-              <option>62-80</option>
-            </select>
-          </div>
-          <div class="question">
-            <label>What is your ethnicity?</label>
-            <select name="ethnicity" required>
-              <option value="">Select</option>
-              <option>White/Caucasian</option>
-              <option>Black or African-American</option>
-              <option>American Indian or Alaskan Native</option>
-              <option>Asian/Asian-American</option>
-              <option>Native Hawaiian or other Pacific islander</option>
-              <option>From multiple races</option>
-              <option>Prefer not to disclose</option>
-            </select>
-          </div>
-          <div class="question">
-            <label>A frog climbs up 4 feet but slips down 1 foot every minute. How many feet does the frog climb in 3 minutes?</label>
-            <select name="frogClimb" required>
-              <option value="">Select</option>
-              <option>9 feet</option>
-              <option>12 feet</option>
-              <option>7 feet</option>
-              <option>3 feet</option>
-            </select>
-          </div>
-        `
-      },
-      {
-        id: "video1",
-        video: "https://www.youtube.com/embed/PIP4TXsbTgY",
-        message: "Please watch the following video fully. Proceed to the next section after you are done.",
-        wait: 48000
-      },
-      {
-        id: "question1",
-        html: `
-          <div class="question">
-            <p>Please answer the following questions honestly and to the best of your ability.</p>
-          </div>
-          <div class="question">
-            <label>Jerry had 20 cups of juice. He drank all but 9 of them. How many cups does Jerry have left?</label>
-            <select name="juiceCups" required>
-              <option value="">Select</option>
-              <option>9</option>
-              <option>11</option>
-              <option>0</option>
-              <option>20</option>
-            </select>
-          </div>
-          <div class="question">
-            <label>How confident are you about your answer?</label>
-            <input type="range" name="confJuice" min="1" max="5" required />
-          </div>
-          <div class="question">
-            <label>Is this video real or fake?</label>
-            <select name="realFake1" required>
-              <option value="">Select</option>
-              <option>Real</option>
-              <option>Fake</option>
-            </select>
-          </div>
-          <div class="question">
-            <label>How did this video make you feel?</label>
-            <textarea name="feel1" required></textarea>
-          </div>
-        `
-      },
-      {
-        id: "video2",
-        video: "https://www.youtube.com/embed/aRCK2vjnIqs",
-        message: "Please watch the following video fully. Proceed to the next section after you are done.",
-        wait: 48000
-      },
-      {
-        id: "question2",
-        html: `
-          <div class="question">
-            <p>Please answer the following questions honestly and to the best of your ability.</p>
-          </div>
-          <div class="question">
-            <label>There are 10 cookies in the jar. You take away 4 cookies. How many cookies do you have?</label>
-            <select name="cookies" required>
-              <option value="">Select</option>
-              <option>4</option>
-              <option>6</option>
-              <option>10</option>
-              <option>0</option>
-            </select>
-          </div>
-          <div class="question">
-            <label>How confident are you about your answer?</label>
-            <input type="range" name="confCookie" min="1" max="5" required />
-          </div>
-          <div class="question">
-            <label>Is this video real or fake?</label>
-            <select name="realFake2" required>
-              <option value="">Select</option>
-              <option>Real</option>
-              <option>Fake</option>
-            </select>
-          </div>
-          <div class="question">
-            <label>How did this video make you feel?</label>
-            <textarea name="feel2" required></textarea>
-          </div>
-        `
-      },
-      {
-        id: "video3",
-        video: "https://www.youtube.com/embed/RWUx0NnOpnU",
-        message: "Please watch the following video fully. Proceed to the next section after you are done.",
-        wait: 48000
-      },
-      {
-        id: "question3",
-        html: `
-          <div class="question">
-            <p>Please answer the following questions to the best of your ability.</p>
-          </div>
-          <div class="question">
-            <label>A soccer ball costs $3 and a pair of shoes costs $7 more than the ball. How much do the shoes cost?</label>
-            <select name="shoesCost" required>
-              <option value="">Select</option>
-              <option>$7</option>
-              <option>$10</option>
-              <option>$3</option>
-              <option>$4</option>
-            </select>
-          </div>
-          <div class="question">
-            <label>How confident are you about your answer?</label>
-            <input type="range" name="confShoes" min="1" max="5" required />
-          </div>
-          <div class="question">
-            <label>Is this video real or fake?</label>
-            <select name="realFake3" required>
-              <option value="">Select</option>
-              <option>Real</option>
-              <option>Fake</option>
-            </select>
-          </div>
-          <div class="question">
-            <label>How did this video make you feel?</label>
-            <textarea name="feel3" required></textarea>
-          </div>
-        `
-      }
-    ];
+    // Track time spent on all sections except video ones
+    let sectionTimes = Array(sections.length).fill(0);
+    let sectionStartTime = Date.now();
 
-    function renderSection(index) {
-      const section = sections[index];
-      const div = document.createElement("div");
-      div.classList.add("section", "active");
-      div.setAttribute("id", `section-${index}`);
+    // YouTube iframe API setup for stopping videos
+    let players = {};
 
-      if (section.html) div.innerHTML = section.html;
-      else if (section.video) {
-        div.innerHTML = `
-          <div class="question">
-            <p>${section.message}</p>
-            <iframe id="videoFrame" width="100%" height="315" src="${section.video}" frameborder="0" allowfullscreen></iframe>
-          </div>
-        `;
-        timerMessage.textContent = `Please wait ${section.wait / 1000} seconds...`;
-        nextBtn.disabled = true;
-        clearTimeout(videoTimeout);
-        videoTimeout = setTimeout(() => {
-          timerMessage.textContent = "You may proceed.";
-          nextBtn.disabled = false;
-        }, section.wait);
-      }
-
-      form.innerHTML = "";
-      form.appendChild(div);
+    function onYouTubeIframeAPIReady() {
+      ['video1', 'video2', 'video3'].forEach(id => {
+        players[id] = new YT.Player(id);
+      });
     }
 
-    renderSection(currentSection);
+    // Load YouTube iframe API
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
 
-    nextBtn.addEventListener("click", async () => {
-      const section = document.getElementById(`section-${currentSection}`);
-      const inputs = section.querySelectorAll("select, textarea, input");
-      for (const input of inputs) {
-        if (!input.checkValidity()) {
-          input.reportValidity();
-          return;
+    // Timer controls for video sections
+    let videoTimers = {};
+    let canProceed = false;
+
+    function startVideoTimer(sectionIdx) {
+      canProceed = false;
+      let timerId = 'video' + (sectionIdx + 1) + '-timer';
+      const timerEl = document.getElementById(timerId);
+      let timeLeft = VIDEO_DURATION;
+
+      timerEl.textContent = `You must watch the full ${VIDEO_DURATION} seconds before proceeding. (${timeLeft}s left)`;
+
+      videoTimers[sectionIdx] = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = `You must watch the full ${VIDEO_DURATION} seconds before proceeding. (${timeLeft}s left)`;
+
+        if (timeLeft <= 0) {
+          clearInterval(videoTimers[sectionIdx]);
+          timerEl.textContent = "You may now proceed.";
+          canProceed = true;
+          document.getElementById('nextBtn').disabled = false;
+        }
+      }, 1000);
+    }
+
+    function stopVideoTimer(sectionIdx) {
+      clearInterval(videoTimers[sectionIdx]);
+      canProceed = true;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    // Stop all videos
+    function stopAllVideos() {
+      Object.values(players).forEach(player => {
+        if (player && typeof player.pauseVideo === 'function') {
+          player.pauseVideo();
+        }
+      });
+    }
+
+    // Show the section by index
+    function showSection(index) {
+      sections.forEach((section, i) => {
+        section.style.display = i === index ? 'block' : 'none';
+      });
+
+      // Update buttons
+      document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'inline-block';
+      const nextBtn = document.getElementById('nextBtn');
+
+      if (index === sections.length - 1) {
+        nextBtn.textContent = 'Submit';
+      } else {
+        nextBtn.textContent = 'Next';
+      }
+
+      // Enable/disable next button
+      if (VIDEO_SECTIONS.includes(index)) {
+        document.getElementById('nextBtn').disabled = true;
+        startVideoTimer(index);
+      } else {
+        // Normal section
+        document.getElementById('nextBtn').disabled = false;
+      }
+
+      sectionStartTime = Date.now();
+    }
+
+    // Validate required inputs in current section
+    function validateSection(index) {
+      const section = sections[index];
+      const inputs = section.querySelectorAll('input, textarea, select');
+      for (let input of inputs) {
+        if (input.hasAttribute('required')) {
+          if ((input.type === 'radio' || input.type === 'checkbox') && !section.querySelector(`input[name="${input.name}"]:checked`)) {
+            alert('Please answer all required questions before proceeding.');
+            return false;
+          }
+          if ((input.tagName === 'TEXTAREA' || input.tagName === 'SELECT') && !input.value.trim()) {
+            alert('Please answer all required questions before proceeding.');
+            return false;
+          }
         }
       }
-      const endTime = Date.now();
-      sectionTimers.push(Math.round((endTime - startTime) / 1000));
-      startTime = Date.now();
+      // For video sections, also check canProceed
+      if (VIDEO_SECTIONS.includes(index) && !canProceed) {
+        alert(`You must watch the full ${VIDEO_DURATION} seconds before proceeding.`);
+        return false;
+      }
+      return true;
+    }
 
-      // Stop current video
-      const videoFrame = document.getElementById("videoFrame");
-      if (videoFrame) {
-        videoFrame.src = "";
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (!validateSection(currentSection)) return;
+
+      // Save time spent on this section
+      sectionTimes[currentSection] += Math.floor((Date.now() - sectionStartTime) / 1000);
+
+      // If video section, stop timer and video
+      if (VIDEO_SECTIONS.includes(currentSection)) {
+        stopVideoTimer(currentSection);
+        stopAllVideos();
+      }
+
+      if (currentSection === sections.length - 1) {
+        submitSurvey();
+        return;
       }
 
       currentSection++;
-
-      if (currentSection >= sections.length) {
-        const formData = new FormData(form);
-        const payload = Object.fromEntries(formData.entries());
-
-        sectionTimers.forEach((time, i) => {
-          payload[`timer${i}`] = time;
-        });
-
-        const res = await fetch("/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (res.ok) {
-          form.innerHTML = '<p style="text-align: center">Thank you for your submission!</p>';
-          nextBtn.remove();
-        } else {
-          alert("Submission failed.");
-        }
-      } else {
-        renderSection(currentSection);
-      }
+      showSection(currentSection);
     });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      // Save time spent on this section
+      sectionTimes[currentSection] += Math.floor((Date.now() - sectionStartTime) / 1000);
+
+      if (VIDEO_SECTIONS.includes(currentSection)) {
+        stopVideoTimer(currentSection);
+        stopAllVideos();
+      }
+
+      currentSection--;
+      showSection(currentSection);
+    });
+
+    function submitSurvey() {
+      // Collect all answers
+      const form = document.getElementById('surveyForm');
+      const formData = new FormData(form);
+      const data = {};
+
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+
+      // Add timing data (only for non-video sections)
+      // Sections: 0,2,4,6 are questions; 1,3,5 are videos; 7 is thank you
+      data.section0Time = sectionTimes[0];
+      data.section2Time = sectionTimes[2];
+      data.section4Time = sectionTimes[4];
+      data.section6Time = sectionTimes[6];
+
+      // Post data to backend
+      fetch('/submit', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(data)
+      })
+      .then(resp => resp.json())
+      .then(res => {
+        if (res.success) {
+          currentSection++;
+          showSection(currentSection);
+          // Hide buttons on thank you page
+          document.getElementById('prevBtn').style.display = 'none';
+          document.getElementById('nextBtn').style.display = 'none';
+        } else {
+          alert('Error submitting data: ' + res.message);
+        }
+      })
+      .catch(err => {
+        alert('Error submitting data: ' + err.message);
+      });
+    }
+
+    // Initialize
+    showSection(currentSection);
   </script>
 </body>
 </html>
