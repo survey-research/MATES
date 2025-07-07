@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research Survey</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f2f2;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .section {
+      display: none;
+      margin-bottom: 2rem;
+      border-left: 4px solid #1a73e8;
+      padding-left: 1rem;
+    }
+    .section.active {
+      display: block;
+    }
+    .question {
+      margin-bottom: 1rem;
+    }
+    .question label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    button {
+      display: block;
+      margin: 1rem auto;
+      padding: 0.5rem 1.5rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Research Survey</h1>
+
+    <form id="surveyForm">
+      <!-- Sections inserted here by JS -->
+    </form>
+
+    <button type="button" id="nextBtn">Next</button>
+    <div id="timerMessage" style="text-align: center; color: gray; margin-top: 1rem;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("surveyForm");
+    const nextBtn = document.getElementById("nextBtn");
+    const timerMessage = document.getElementById("timerMessage");
+
+    let currentSection = 0;
+    let startTime = Date.now();
+    const sectionTimers = [];
+    let videoTimeout;
+
+    const sections = [
+      {
+        id: "intro",
+        html: `
+          <div class="question">
+            <p>Hello, my name is M Majid and I am a sophomore at the Marine Academy of Technology and Environmental Science. I am conducting a survey for my research project regarding different cognitive styles.<br>This short study includes a series of 20-second videos, logic questions, and self assessments.<br>When you submit this form, it will not automatically collect your details like name and email address unless you provide it yourself.</p>
+            <p><strong>Demographics Section:</strong> This section collects general information about participants to help us understand the background of respondents and ensure the study includes a diverse group. Your responses are confidential and used only for research purposes.</p>
+          </div>
+          <div class="question">
+            <label>What is your age range?</label>
+            <select name="ageRange" required>
+              <option value="">Select</option>
+              <option>0-13</option>
+              <option>14-29</option>
+              <option>30-45</option>
+              <option>46-61</option>
+              <option>62-80</option>
+            </select>
+          </div>
+          <div class="question">
+            <label>What is your ethnicity?</label>
+            <select name="ethnicity" required>
+              <option value="">Select</option>
+              <option>White/Caucasian</option>
+              <option>Black or African-American</option>
+              <option>American Indian or Alaskan Native</option>
+              <option>Asian/Asian-American</option>
+              <option>Native Hawaiian or other Pacific islander</option>
+              <option>From multiple races</option>
+              <option>Prefer not to disclose</option>
+            </select>
+          </div>
+          <div class="question">
+            <label>A frog climbs up 4 feet but slips down 1 foot every minute. How many feet does the frog climb in 3 minutes?</label>
+            <select name="frogClimb" required>
+              <option value="">Select</option>
+              <option>9 feet</option>
+              <option>12 feet</option>
+              <option>7 feet</option>
+              <option>3 feet</option>
+            </select>
+          </div>
+        `
+      },
+      {
+        id: "video1",
+        video: "https://www.youtube.com/embed/PIP4TXsbTgY",
+        message: "Please watch the following video fully. Proceed to the next section after you are done.",
+        wait: 48000
+      },
+      {
+        id: "question1",
+        html: `
+          <div class="question">
+            <p>Please answer the following questions honestly and to the best of your ability.</p>
+          </div>
+          <div class="question">
+            <label>Jerry had 20 cups of juice. He drank all but 9 of them. How many cups does Jerry have left?</label>
+            <select name="juiceCups" required>
+              <option value="">Select</option>
+              <option>9</option>
+              <option>11</option>
+              <option>0</option>
+              <option>20</option>
+            </select>
+          </div>
+          <div class="question">
+            <label>How confident are you about your answer?</label>
+            <input type="range" name="confJuice" min="1" max="5" required />
+          </div>
+          <div class="question">
+            <label>Is this video real or fake?</label>
+            <select name="realFake1" required>
+              <option value="">Select</option>
+              <option>Real</option>
+              <option>Fake</option>
+            </select>
+          </div>
+          <div class="question">
+            <label>How did this video make you feel?</label>
+            <textarea name="feel1" required></textarea>
+          </div>
+        `
+      },
+      {
+        id: "video2",
+        video: "https://www.youtube.com/embed/aRCK2vjnIqs",
+        message: "Please watch the following video fully. Proceed to the next section after you are done.",
+        wait: 48000
+      },
+      {
+        id: "question2",
+        html: `
+          <div class="question">
+            <p>Please answer the following questions honestly and to the best of your ability.</p>
+          </div>
+          <div class="question">
+            <label>There are 10 cookies in the jar. You take away 4 cookies. How many cookies do you have?</label>
+            <select name="cookies" required>
+              <option value="">Select</option>
+              <option>4</option>
+              <option>6</option>
+              <option>10</option>
+              <option>0</option>
+            </select>
+          </div>
+          <div class="question">
+            <label>How confident are you about your answer?</label>
+            <input type="range" name="confCookie" min="1" max="5" required />
+          </div>
+          <div class="question">
+            <label>Is this video real or fake?</label>
+            <select name="realFake2" required>
+              <option value="">Select</option>
+              <option>Real</option>
+              <option>Fake</option>
+            </select>
+          </div>
+          <div class="question">
+            <label>How did this video make you feel?</label>
+            <textarea name="feel2" required></textarea>
+          </div>
+        `
+      },
+      {
+        id: "video3",
+        video: "https://www.youtube.com/embed/RWUx0NnOpnU",
+        message: "Please watch the following video fully. Proceed to the next section after you are done.",
+        wait: 48000
+      },
+      {
+        id: "question3",
+        html: `
+          <div class="question">
+            <p>Please answer the following questions to the best of your ability.</p>
+          </div>
+          <div class="question">
+            <label>A soccer ball costs $3 and a pair of shoes costs $7 more than the ball. How much do the shoes cost?</label>
+            <select name="shoesCost" required>
+              <option value="">Select</option>
+              <option>$7</option>
+              <option>$10</option>
+              <option>$3</option>
+              <option>$4</option>
+            </select>
+          </div>
+          <div class="question">
+            <label>How confident are you about your answer?</label>
+            <input type="range" name="confShoes" min="1" max="5" required />
+          </div>
+          <div class="question">
+            <label>Is this video real or fake?</label>
+            <select name="realFake3" required>
+              <option value="">Select</option>
+              <option>Real</option>
+              <option>Fake</option>
+            </select>
+          </div>
+          <div class="question">
+            <label>How did this video make you feel?</label>
+            <textarea name="feel3" required></textarea>
+          </div>
+        `
+      }
+    ];
+
+    function renderSection(index) {
+      const section = sections[index];
+      const div = document.createElement("div");
+      div.classList.add("section", "active");
+      div.setAttribute("id", `section-${index}`);
+
+      if (section.html) div.innerHTML = section.html;
+      else if (section.video) {
+        div.innerHTML = `
+          <div class="question">
+            <p>${section.message}</p>
+            <iframe id="videoFrame" width="100%" height="315" src="${section.video}" frameborder="0" allowfullscreen></iframe>
+          </div>
+        `;
+        timerMessage.textContent = `Please wait ${section.wait / 1000} seconds...`;
+        nextBtn.disabled = true;
+        clearTimeout(videoTimeout);
+        videoTimeout = setTimeout(() => {
+          timerMessage.textContent = "You may proceed.";
+          nextBtn.disabled = false;
+        }, section.wait);
+      }
+
+      form.innerHTML = "";
+      form.appendChild(div);
+    }
+
+    renderSection(currentSection);
+
+    nextBtn.addEventListener("click", async () => {
+      const section = document.getElementById(`section-${currentSection}`);
+      const inputs = section.querySelectorAll("select, textarea, input");
+      for (const input of inputs) {
+        if (!input.checkValidity()) {
+          input.reportValidity();
+          return;
+        }
+      }
+      const endTime = Date.now();
+      sectionTimers.push(Math.round((endTime - startTime) / 1000));
+      startTime = Date.now();
+
+      // Stop current video
+      const videoFrame = document.getElementById("videoFrame");
+      if (videoFrame) {
+        videoFrame.src = "";
+      }
+
+      currentSection++;
+
+      if (currentSection >= sections.length) {
+        const formData = new FormData(form);
+        const payload = Object.fromEntries(formData.entries());
+
+        sectionTimers.forEach((time, i) => {
+          payload[`timer${i}`] = time;
+        });
+
+        const res = await fetch("/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          form.innerHTML = '<p style="text-align: center">Thank you for your submission!</p>';
+          nextBtn.remove();
+        } else {
+          alert("Submission failed.");
+        }
+      } else {
+        renderSection(currentSection);
+      }
+    });
+  </script>
+</body>
+</html>
